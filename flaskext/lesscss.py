@@ -10,7 +10,9 @@
     :license: MIT, see LICENSE for more details.
 """
 
-import os, subprocess
+import os
+import subprocess
+
 
 def lesscss(app):
     @app.before_request
@@ -19,10 +21,10 @@ def lesscss(app):
             from warnings import warn
             warn(DeprecationWarning('static_path is called '
                                     'static_url_path since Flask 0.7'),
-                                    stacklevel=2)
-        
+                 stacklevel=2)
+
             static_url_path = app.static_path
-        
+
         else:
             static_url_path = app.static_url_path
 
@@ -34,7 +36,7 @@ def lesscss(app):
                 os.path.join(path, f)
                 for f in filenames if os.path.splitext(f)[1] == '.less'
             ])
-        
+
         for less_path in less_paths:
             css_path = os.path.splitext(less_path)[0] + '.css'
             if not os.path.isfile(css_path):
@@ -44,5 +46,3 @@ def lesscss(app):
             less_mtime = os.path.getmtime(less_path)
             if less_mtime >= css_mtime:
                 subprocess.call(['lessc', less_path, css_path], shell=False)
-
-
